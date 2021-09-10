@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.wso2.carbon.identity</groupId>
+    <artifactId>org.wso2.carbon.identity.custom.authenticator.sso</artifactId>
+    <version>1.0.0</version>
+    <name>WSO2 Carbon - SSO Application Authenticator</name>
+    <packaging>bundle</packaging>
+
+    <repositories>
+        <repository>
+            <id>wso2-nexus</id>
+            <name>WSO2 internal Repository</name>
+            <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+        </repository>
+
+        <repository>
+            <id>wso2.releases</id>
+            <name>WSO2 internal Repository</name>
+            <url>http://maven.wso2.org/nexus/content/repositories/releases/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+        </repository>
+
+        <repository>
+            <id>wso2.snapshots</id>
+            <name>Apache Snapshot Repository</name>
+            <url>http://maven.wso2.org/nexus/content/repositories/snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
+
+        <repository>
+            <id>smslib.releases</id>
+            <name>smslib Repository</name>
+            <url>https://maven.wso2.org/nexus/content/repositories/thirdparty/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+        </repository>
+    </repositories>
+
+
+    <dependencies>
+        <!-- Carbon Kernel dependencies -->
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.utils</artifactId>
+            <version>${carbon.kernel.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.ui</artifactId>
+            <version>${carbon.kernel.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.core</artifactId>
+            <version>${carbon.kernel.version}</version>
+        </dependency>
+
+        <!-- Carbon Identity Framework dependencies -->
+        <dependency>
+            <groupId>org.wso2.carbon.identity.framework</groupId>
+            <artifactId>org.wso2.carbon.identity.application.common</artifactId>
+            <version>${carbon.identity.framework.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.framework</groupId>
+            <artifactId>org.wso2.carbon.identity.base</artifactId>
+            <version>${carbon.identity.framework.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.opensaml</groupId>
+                    <artifactId>opensaml</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.opensaml</groupId>
+                    <artifactId>opensaml1</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.framework</groupId>
+            <artifactId>org.wso2.carbon.identity.core</artifactId>
+            <version>${carbon.identity.framework.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.identity.framework</groupId>
+            <artifactId>org.wso2.carbon.identity.application.authentication.framework</artifactId>
+            <version>${carbon.identity.framework.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.opensaml</groupId>
+                    <artifactId>opensaml</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.opensaml</groupId>
+                    <artifactId>opensaml1</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.opensaml</groupId>
+                    <artifactId>xmltooling</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!--SAML Common Util dependency-->
+        <dependency>
+            <groupId>org.wso2.carbon.identity.saml.common</groupId>
+            <artifactId>org.wso2.carbon.identity.saml.common.util</artifactId>
+            <version>${saml.common.util.version}</version>
+        </dependency>
+
+        <!-- Commons dependencies -->
+        <dependency>
+            <groupId>commons-collections.wso2</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>${commons-collections.version}</version>
+        </dependency>
+
+        <!-- Orbit dependencies -->
+        <dependency>
+            <groupId>org.wso2.orbit.org.opensaml</groupId>
+            <artifactId>opensaml</artifactId>
+            <version>${opensaml3.wso2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.orbit.joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>${joda.wso2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.orbit.org.owasp.encoder</groupId>
+            <artifactId>encoder</artifactId>
+            <version>${encoder.wso2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.axis2.wso2</groupId>
+            <artifactId>axis2</artifactId>
+            <version>${axis2.wso2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.axis2.wso2</groupId>
+            <artifactId>axis2-client</artifactId>
+            <version>${axis2.wso2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.orbit.org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${httpcomponents-httpclient.wso2.version}</version>
+        </dependency>
+
+        <!-- Identity Application Authentication SAMLSSO dependencies -->
+        <dependency>
+            <groupId>org.wso2.carbon.identity.outbound.auth.saml2</groupId>
+            <artifactId>org.wso2.carbon.identity.application.authenticator.samlsso</artifactId>
+            <version>${org.wso2.carbon.identity.application.authenticator.samlsso.version}</version>
+        </dependency>
+
+        <!-- Identity Application Authentication OIDC dependencies -->
+        <dependency>
+            <groupId>org.wso2.carbon.identity.outbound.auth.oidc</groupId>
+            <artifactId>org.wso2.carbon.identity.application.authenticator.oidc</artifactId>
+            <version>${org.wso2.carbon.identity.application.authenticator.oidc.version}</version>
+        </dependency>
+
+        <!-- Unit test dependencies -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.api.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>${testng.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>org.jacoco.agent</artifactId>
+            <classifier>runtime</classifier>
+            <version>${jacoco.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-testng</artifactId>
+            <version>${powermock-module-testng.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <version>${powermock-module-testng.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.felix</groupId>
+            <artifactId>org.apache.felix.scr.ds-annotations</artifactId>
+            <version>${apache.felix.scr.ds.annotations.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.ops4j.pax.logging</groupId>
+            <artifactId>pax-logging-api</artifactId>
+            <version>${pax.logging.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <scope>provided</scope>
+            <version>${com.google.guava.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.code.findbugs</groupId>
+                    <artifactId>jsr305</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2database.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>${maven.bundle.plugin.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Bundle-Name>${project.artifactId}</Bundle-Name>
+                        <Private-Package>
+                            org.wso2.carbon.identity.custom.authenticator.samlsso.internal,
+                        </Private-Package>
+                        <Import-Package>
+                            javax.crypto,
+                            javax.servlet; version="${imp.pkg.version.javax.servlet}",
+                            javax.servlet.http; version="${imp.pkg.version.javax.servlet}",
+                            javax.xml.namespace,
+                            javax.xml.parsers; version="${javax.xml.parsers.import.pkg.version}",
+
+                            org.apache.commons.codec.binary; version="${commons-codec.wso2.osgi.version.range}",
+                            org.apache.commons.logging; version="${commons-logging.osgi.version.range}",
+                            org.apache.xerces.util; resolution:=optional,
+                            org.apache.xml.security; version="${wss4j.xml.security.imp.pkg.version.range}",
+                            org.apache.xml.security.utils; version="${wss4j.xml.security.imp.pkg.version.range}",
+
+                            org.joda.time; version="${joda.wso2.osgi.version.range}",
+
+                            org.opensaml.*; version="${opensaml3.wso2.osgi.version.range}",
+                            net.shibboleth.utilities.java.support.*; version="${opensaml3.wso2.osgi.version.range}",
+
+                            org.osgi.framework; version="${osgi.framework.imp.pkg.version.range}",
+                            org.osgi.service.component; version="${osgi.service.component.imp.pkg.version.range}",
+
+                            org.w3c.dom.*,
+
+                            org.wso2.carbon.identity.core.util;
+                            version="${carbon.identity.framework.imp.pkg.version.range}",
+                            org.wso2.carbon.identity.application.authentication.framework.*;
+                            version="${carbon.identity.framework.imp.pkg.version.range}",
+                            org.wso2.carbon.identity.application.common.model;
+                            version="${carbon.identity.framework.imp.pkg.version.range}",
+                            org.wso2.carbon.identity.application.common.util;
+                            version="${carbon.identity.framework.imp.pkg.version.range}",
+                            org.wso2.carbon.identity.saml.common.util.*; version="${saml.common.util.version.range}",
+
+                            org.wso2.carbon.core.util; version="${carbon.kernel.imp.pkg.version.range}",
+                            org.wso2.carbon.ui; version="${carbon.kernel.imp.pkg.version.range}",
+                            org.wso2.carbon.user.api; version="${carbon.user.api.imp.pkg.version.range}",
+                            org.wso2.carbon.user.core.service; version="${carbon.kernel.imp.pkg.version.range}",
+                            org.wso2.carbon.user.core.tenant; version="${carbon.kernel.imp.pkg.version.range}",
+                            org.wso2.carbon.utils; version="${carbon.kernel.imp.pkg.version.range}",
+                            org.osgi.service.component.*;version="${imp.package.version.osgi.services}",
+                            org.xml.sax
+                        </Import-Package>
+                        <Export-Package>
+                            !org.wso2.carbon.identity.custom.authenticator.samlsso.internal,
+                            org.wso2.carbon.identity.custom.authenticator.samlsso.*;
+                            version="${identity.outbound.auth.samlsso.exp.pkg.version}"
+                        </Export-Package>
+                        <DynamicImport-Package>*</DynamicImport-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.surefire.plugin.version}</version>
+                <configuration>
+                    <suiteXmlFiles>
+                        <suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
+                    </suiteXmlFiles>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>7</source>
+                    <target>7</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Identity Outbound Authentication SAMLSSO Version-->
+        <identity.outbound.auth.samlsso.exp.pkg.version>${project.version}
+        </identity.outbound.auth.samlsso.exp.pkg.version>
+        <identity.outbound.auth.samlsso.imp.pkg.version.range>[1.0.0, 2.0.0)
+        </identity.outbound.auth.samlsso.imp.pkg.version.range>
+
+        <!--Carbon Kernel Version-->
+        <carbon.kernel.version>4.6.0</carbon.kernel.version>
+        <carbon.kernel.feature.version>4.6.0</carbon.kernel.feature.version>
+        <carbon.kernel.imp.pkg.version.range>[4.4.0, 5.0.0)</carbon.kernel.imp.pkg.version.range>
+        <carbon.user.api.imp.pkg.version.range>[1.0.1, 2.0.0)</carbon.user.api.imp.pkg.version.range>
+
+        <!--Carbon Identity Framework Version-->
+        <carbon.identity.framework.version>5.18.101</carbon.identity.framework.version>
+        <identity-application-auth-samlsso.version>5.3.18</identity-application-auth-samlsso.version>
+        <carbon.identity.framework.imp.pkg.version.range>[5.15.0, 6.0.0)
+        </carbon.identity.framework.imp.pkg.version.range>
+
+        <!--SAML Common Util Version-->
+        <saml.common.util.version>1.0.3</saml.common.util.version>
+        <saml.common.util.version.range>[1.0.0,2.0.0)</saml.common.util.version.range>
+
+        <!-- Carbon Commons -->
+        <commons-collections.version>3.2.0.wso2v1</commons-collections.version>
+        <commons-codec.wso2.osgi.version.range>[1.4.0,2.0.0)</commons-codec.wso2.osgi.version.range>
+        <commons-logging.osgi.version.range>[1.2,2.0)</commons-logging.osgi.version.range>
+
+        <!-- OSGi/Equinox versions-->
+        <equinox.javax.servlet.version>3.0.0.v201112011016</equinox.javax.servlet.version>
+        <osgi.framework.imp.pkg.version.range>[1.7.0, 2.0.0)</osgi.framework.imp.pkg.version.range>
+        <osgi.service.component.imp.pkg.version.range>[1.2.0, 2.0.0)</osgi.service.component.imp.pkg.version.range>
+
+        <!-- Servlet API -->
+        <exp.pkg.version.javax.servlet>2.6.0</exp.pkg.version.javax.servlet>
+        <imp.pkg.version.javax.servlet>[2.6.0, 3.0.0)</imp.pkg.version.javax.servlet>
+
+        <!-- Axis2 Version -->
+        <axis2.wso2.version>1.6.1-wso2v37</axis2.wso2.version>
+
+        <!-- Orbit versions-->
+        <opensaml.version>3.3.1</opensaml.version>
+        <opensaml3.wso2.version>3.3.1.wso2v2</opensaml3.wso2.version>
+        <opensaml3.wso2.osgi.version.range>[3.3.1,3.4.0)</opensaml3.wso2.osgi.version.range>
+        <httpcomponents-httpclient.wso2.version>4.3.6.wso2v2</httpcomponents-httpclient.wso2.version>
+
+        <joda.version>2.9.4</joda.version>
+        <joda.wso2.version>2.9.4.wso2v1</joda.wso2.version>
+        <joda.wso2.osgi.version.range>[2.8.2,3.0.0)</joda.wso2.osgi.version.range>
+
+        <encoder.wso2.version>1.2.0.wso2v1</encoder.wso2.version>
+        <javax.xml.parsers.import.pkg.version>[0.0.0, 1.0.0)</javax.xml.parsers.import.pkg.version>
+        <wss4j.xml.security.imp.pkg.version.range>[1.4.2.patched,2.0.0)</wss4j.xml.security.imp.pkg.version.range>
+
+        <!--Maven Plugin Version-->
+        <carbon.p2.plugin.version>1.5.3</carbon.p2.plugin.version>
+        <maven.compiler.plugin.version>2.3.1</maven.compiler.plugin.version>
+        <maven.scr.plugin.version>1.26.0</maven.scr.plugin.version>
+        <maven.bundle.plugin.version>3.2.0</maven.bundle.plugin.version>
+        <maven.buildnumber.plugin.version>1.4</maven.buildnumber.plugin.version>
+
+        <!-- Unit test versions -->
+        <testng.version>6.9.10</testng.version>
+        <jacoco.version>0.7.9</jacoco.version>
+        <maven.surefire.plugin.version>2.18.1</maven.surefire.plugin.version>
+        <slf4j.api.version>1.7.12</slf4j.api.version>
+        <powermock-module-testng.version>1.6.6</powermock-module-testng.version>
+        <apache.felix.scr.ds.annotations.version>1.2.4</apache.felix.scr.ds.annotations.version>
+        <pax.logging.version>1.11.0</pax.logging.version>
+        <imp.package.version.osgi.services>[1.2.0,2.0.0)</imp.package.version.osgi.services>
+        <com.google.guava.version>27.0-jre</com.google.guava.version>
+        <h2database.version>1.4.199</h2database.version>
+
+        <org.wso2.carbon.identity.application.authenticator.samlsso.version>
+            5.3.18
+        </org.wso2.carbon.identity.application.authenticator.samlsso.version>
+        <org.wso2.carbon.identity.application.authenticator.oidc.version>
+            5.6.0
+        </org.wso2.carbon.identity.application.authenticator.oidc.version>
+
+
+    </properties>
+</project>
